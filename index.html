@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#0f1220" />
+<title>Flow</title>
+<link rel="manifest" href="manifest.webmanifest" />
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml" />
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<div id="bg"></div>
+<div id="bg-overlay"></div>
+
+<main class="stage">
+  <header class="top">
+    <div class="greeting">
+      <div id="clock" class="clock">--:--</div>
+      <div id="greet" class="greet">Hello.</div>
+      <div id="date" class="date"></div>
+    </div>
+  </header>
+
+  <section id="w-quote" class="quote-wrap widget-toggle">
+    <blockquote id="quote-text" class="quote-text">&ldquo;&rdquo;</blockquote>
+    <div class="quote-meta">
+      <cite id="quote-author" class="quote-author"></cite>
+      <button id="quote-shuffle" class="icon-btn" title="New quote" aria-label="New quote">&#x21bb;</button>
+    </div>
+  </section>
+
+  <section class="widgets">
+    <!-- Pomodoro -->
+    <article id="w-pomodoro" class="card widget-toggle">
+      <div class="card-head">
+        <h2>Pomodoro</h2>
+        <span id="pomo-count" class="pill">0 done</span>
+      </div>
+      <div id="pomo-phase" class="pomo-phase">Focus</div>
+      <div id="pomo-time" class="pomo-time">25:00</div>
+      <div class="pomo-controls">
+        <button id="pomo-start" class="btn primary">Start</button>
+        <button id="pomo-reset" class="btn">Reset</button>
+        <button id="pomo-skip" class="btn ghost">Skip</button>
+      </div>
+      <div class="pomo-modes">
+        <button class="chip" data-phase="work">Focus</button>
+        <button class="chip" data-phase="short">Short break</button>
+        <button class="chip" data-phase="long">Long break</button>
+      </div>
+    </article>
+
+    <!-- Tasks -->
+    <article id="w-tasks" class="card widget-toggle">
+      <div class="card-head">
+        <h2>Tasks</h2>
+        <span id="task-count" class="pill">0 left</span>
+      </div>
+      <form id="task-form" class="task-form">
+        <input id="task-input" type="text" placeholder="What needs doing?" autocomplete="off" maxlength="200" />
+        <button class="btn primary" type="submit">Add</button>
+      </form>
+      <ul id="task-list" class="task-list"></ul>
+      <button id="task-clear" class="linkish" hidden>Clear completed</button>
+    </article>
+
+    <!-- Notes -->
+    <article id="w-notes" class="card widget-toggle">
+      <div class="card-head">
+        <h2>Notes</h2>
+        <span id="note-saved" class="pill">saved</span>
+      </div>
+      <textarea id="notes" placeholder="Jot anything down&hellip;"></textarea>
+    </article>
+  </section>
+
+  <footer class="bottom">
+    <button id="open-settings" class="icon-btn" title="Settings" aria-label="Settings">&#9881;</button>
+  </footer>
+</main>
+
+<!-- Settings drawer -->
+<div id="settings" class="drawer" hidden>
+  <div class="drawer-panel" role="dialog" aria-label="Settings">
+    <div class="drawer-head">
+      <h2>Settings</h2>
+      <button id="close-settings" class="icon-btn" aria-label="Close">&times;</button>
+    </div>
+
+    <div class="drawer-body">
+      <label class="field">
+        <span>Your name</span>
+        <input id="set-name" type="text" placeholder="(optional)" maxlength="40" />
+      </label>
+
+      <fieldset class="field">
+        <legend>Background</legend>
+        <div id="bg-picker" class="bg-picker"></div>
+      </fieldset>
+
+      <fieldset class="field">
+        <legend>Clock</legend>
+        <label class="row"><input type="radio" name="clockfmt" value="24" /> 24-hour</label>
+        <label class="row"><input type="radio" name="clockfmt" value="12" /> 12-hour</label>
+        <label class="row"><input id="set-seconds" type="checkbox" /> Show seconds</label>
+      </fieldset>
+
+      <fieldset class="field">
+        <legend>Show widgets</legend>
+        <label class="row"><input type="checkbox" data-widget="quote" /> Quote</label>
+        <label class="row"><input type="checkbox" data-widget="pomodoro" /> Pomodoro</label>
+        <label class="row"><input type="checkbox" data-widget="tasks" /> Tasks</label>
+        <label class="row"><input type="checkbox" data-widget="notes" /> Notes</label>
+      </fieldset>
+
+      <fieldset class="field">
+        <legend>Pomodoro durations (minutes)</legend>
+        <div class="grid3">
+          <label><span>Focus</span><input id="set-work" type="number" min="1" max="120" /></label>
+          <label><span>Short</span><input id="set-short" type="number" min="1" max="60" /></label>
+          <label><span>Long</span><input id="set-long" type="number" min="1" max="90" /></label>
+        </div>
+        <label class="row"><input id="set-autostart" type="checkbox" /> Auto-start next phase</label>
+        <label class="row"><input id="set-sound" type="checkbox" /> Sound when a phase ends</label>
+      </fieldset>
+
+      <fieldset class="field">
+        <legend>Your own quotes</legend>
+        <p class="hint">Added to the daily rotation. One per line as <code>quote — author</code>.</p>
+        <textarea id="set-quotes" rows="4" placeholder="Do the work. &mdash; Me"></textarea>
+      </fieldset>
+
+      <div class="danger-row">
+        <button id="reset-all" class="btn ghost">Reset everything</button>
+      </div>
+      <p class="hint">Everything is stored only in this browser. Nothing is sent anywhere.</p>
+    </div>
+  </div>
+</div>
+
+<script src="quotes.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
