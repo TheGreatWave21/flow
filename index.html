@@ -12,18 +12,19 @@
 </head>
 <body>
 <div id="bg"></div>
+<div id="bg-media"></div>
 <div id="bg-overlay"></div>
 
 <main class="stage">
   <header class="top">
-    <div class="greeting">
+    <div class="greeting" id="greeting" data-drag>
       <div id="clock" class="clock">--:--</div>
       <div id="greet" class="greet">Hello.</div>
       <div id="date" class="date"></div>
     </div>
   </header>
 
-  <section id="w-quote" class="quote-wrap widget-toggle">
+  <section id="w-quote" class="quote-wrap widget-toggle" data-drag>
     <blockquote id="quote-text" class="quote-text">&ldquo;&rdquo;</blockquote>
     <div class="quote-meta">
       <cite id="quote-author" class="quote-author"></cite>
@@ -33,7 +34,7 @@
 
   <section class="widgets">
     <!-- Pomodoro -->
-    <article id="w-pomodoro" class="card widget-toggle">
+    <article id="w-pomodoro" class="card widget-toggle" data-drag>
       <div class="card-head">
         <h2>Pomodoro</h2>
         <span id="pomo-count" class="pill">0 done</span>
@@ -53,7 +54,7 @@
     </article>
 
     <!-- Tasks -->
-    <article id="w-tasks" class="card widget-toggle">
+    <article id="w-tasks" class="card widget-toggle" data-drag>
       <div class="card-head">
         <h2>Tasks</h2>
         <span id="task-count" class="pill">0 left</span>
@@ -67,7 +68,7 @@
     </article>
 
     <!-- Notes -->
-    <article id="w-notes" class="card widget-toggle">
+    <article id="w-notes" class="card widget-toggle" data-drag>
       <div class="card-head">
         <h2>Notes</h2>
         <span id="note-saved" class="pill">saved</span>
@@ -77,9 +78,17 @@
   </section>
 
   <footer class="bottom">
+    <button id="edit-layout" class="icon-btn" title="Edit layout" aria-label="Edit layout">&#9638;</button>
     <button id="open-settings" class="icon-btn" title="Settings" aria-label="Settings">&#9881;</button>
   </footer>
 </main>
+
+<!-- Layout edit toolbar -->
+<div id="edit-bar" class="edit-bar" hidden>
+  <span>Layout edit mode &mdash; drag a panel, or use the <b>&#10021;</b> handle</span>
+  <button id="edit-reset" class="btn ghost" type="button">Reset</button>
+  <button id="edit-done" class="btn primary" type="button">Done</button>
+</div>
 
 <!-- Settings drawer -->
 <div id="settings" class="drawer" hidden>
@@ -98,6 +107,47 @@
       <fieldset class="field">
         <legend>Background</legend>
         <div id="bg-picker" class="bg-picker"></div>
+
+        <div class="bg-custom">
+          <label class="filebtn">Upload image
+            <input id="set-bg-image" type="file" accept="image/*" hidden />
+          </label>
+          <label class="filebtn">Upload video
+            <input id="set-bg-video" type="file" accept="video/*" hidden />
+          </label>
+        </div>
+
+        <label class="field-sub">
+          <span>YouTube video URL</span>
+          <span class="inline">
+            <input id="set-bg-yt" type="text" placeholder="https://youtube.com/watch?v=&hellip;" />
+            <button id="set-bg-yt-go" class="btn" type="button">Use</button>
+          </span>
+        </label>
+        <p class="hint">
+          A background video is always <strong>fully muted</strong> &mdash; no in-browser tool can
+          strip just the music out of someone else&rsquo;s video. YouTube backgrounds need an
+          internet connection and a video whose owner allows embedding.
+        </p>
+
+        <label class="slider"><span>Blur <b id="bg-blur-v">0</b></span>
+          <input id="set-bg-blur" type="range" min="0" max="40" /></label>
+        <label class="slider"><span>Darken <b id="bg-dim-v">45</b></span>
+          <input id="set-bg-dim" type="range" min="0" max="90" /></label>
+        <label class="slider"><span>Grayscale <b id="bg-gray-v">0</b></span>
+          <input id="set-bg-gray" type="range" min="0" max="100" /></label>
+
+        <button id="set-bg-clear" class="btn ghost" type="button">Remove uploaded image / video</button>
+      </fieldset>
+
+      <fieldset class="field">
+        <legend>Layout</legend>
+        <p class="hint">Move the clock and any panel anywhere on screen, and resize them.
+          Positions are saved in this browser only.</p>
+        <div class="inline">
+          <button id="set-edit-layout" class="btn" type="button">Edit layout</button>
+          <button id="set-reset-layout" class="btn ghost" type="button">Reset to default</button>
+        </div>
       </fieldset>
 
       <fieldset class="field">

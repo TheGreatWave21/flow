@@ -1,5 +1,5 @@
 /* Simple offline cache for the app shell. Bump VERSION when files change. */
-const VERSION = "flow-v1";
+const VERSION = "flow-v3";
 const ASSETS = [
   ".",
   "index.html",

@@ -25,7 +25,13 @@ body {
   overflow-x: hidden;
 }
 
-#bg, #bg-overlay {
+:root {
+  --bg-blur: 0px;
+  --bg-gray: 0;
+  --bg-dim: 0.45;
+}
+
+#bg, #bg-media, #bg-overlay {
   position: fixed;
   inset: 0;
   z-index: -2;
@@ -35,11 +41,34 @@ body {
   background-size: cover;
   background-position: center;
   transition: background 1.2s ease;
+  transform: scale(1.04);
+  filter: blur(var(--bg-blur)) grayscale(var(--bg-gray));
+}
+#bg.has-image { background-size: cover; background-position: center; }
+
+#bg-media {
+  overflow: hidden;
+  pointer-events: none;
+  transform: scale(1.04);
+  filter: blur(var(--bg-blur)) grayscale(var(--bg-gray));
+}
+#bg-media video,
+#bg-media iframe {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: max(100vw, 177.78vh);
+  height: max(100vh, 56.25vw);
+  transform: translate(-50%, -50%);
+  border: 0;
+  pointer-events: none;
 }
 
 #bg-overlay {
   z-index: -1;
-  background: radial-gradient(ellipse at 50% 0%, rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.45));
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(0, 0, 0, 0.02), rgba(0, 0, 0, 0.22)),
+    rgba(0, 0, 0, var(--bg-dim));
 }
 
 .stage {
@@ -326,6 +355,9 @@ input:focus-visible, textarea:focus-visible, .btn:focus-visible, .icon-btn:focus
   position: fixed;
   right: 18px;
   bottom: 18px;
+  z-index: 40;
+  display: flex;
+  gap: 8px;
 }
 
 /* Settings drawer */
@@ -396,12 +428,113 @@ input:focus-visible, textarea:focus-visible, .btn:focus-visible, .icon-btn:focus
   background-position: center;
 }
 .bg-swatch.active { border-color: var(--accent); }
+.bg-swatch.special {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.15rem;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.bg-custom { display: flex; gap: 8px; flex-wrap: wrap; }
+.filebtn {
+  font-size: 0.82rem;
+  padding: 8px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--card-brd);
+  text-align: center;
+}
+.filebtn:hover { background: rgba(255, 255, 255, 0.18); }
+.field-sub { display: flex; flex-direction: column; gap: 6px; font-size: 0.85rem; color: var(--fg-dim); }
+.inline { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.inline input[type="text"] { flex: 1; min-width: 140px; }
+.slider { display: flex; flex-direction: column; gap: 6px; font-size: 0.8rem; color: var(--fg-dim); }
+.slider > span { display: flex; justify-content: space-between; }
+.slider b { color: var(--fg); font-weight: 500; }
+.slider input[type="range"] { width: 100%; accent-color: var(--accent); }
 
 .danger-row { margin-top: 4px; }
 
 @media (max-width: 560px) {
   .stage { gap: 26px; padding-top: 24px; }
   .pomo-controls .btn { flex: 1; }
+}
+
+/* ---- Layout edit mode -------------------------------------- */
+body.lay-custom .stage {
+  display: block;
+  min-height: 100dvh;
+  max-width: none;
+  padding: 0;
+}
+body.lay-custom .widgets { display: block; }
+body.lay-custom [data-drag] {
+  position: fixed;
+  margin: 0;
+  z-index: 6;
+  transform-origin: top left;
+  width: min(360px, 90vw);
+}
+body.lay-custom #greeting { width: auto; }
+
+body.editing { user-select: none; -webkit-user-select: none; }
+body.editing [data-drag] {
+  outline: 1px dashed rgba(255, 255, 255, 0.35);
+  outline-offset: 6px;
+  cursor: grab;
+}
+body.editing [data-drag]:hover { outline-color: var(--accent); }
+body.dragging, body.dragging * { cursor: grabbing !important; }
+
+.lay-tools {
+  position: absolute;
+  top: -34px;
+  left: 0;
+  display: flex;
+  gap: 4px;
+  z-index: 30;
+}
+.lay-tools button {
+  font: inherit;
+  font-size: 0.95rem;
+  line-height: 1;
+  width: 26px;
+  height: 26px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--fg);
+  background: #14162a;
+  border: 1px solid var(--card-brd);
+  border-radius: 7px;
+  cursor: pointer;
+}
+.lay-tools button:hover { background: #23263e; }
+.lay-tools [data-act="move"] { cursor: move; touch-action: none; }
+
+.edit-bar {
+  position: fixed;
+  left: 50%;
+  bottom: 20px;
+  transform: translateX(-50%);
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  max-width: calc(100vw - 24px);
+  padding: 8px 10px 8px 14px;
+  background: #14162a;
+  border: 1px solid var(--card-brd);
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  font-size: 0.82rem;
+}
+.edit-bar[hidden] { display: none; }
+.edit-bar span { color: var(--fg-dim); }
+@media (max-width: 620px) {
+  .edit-bar span { display: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {
